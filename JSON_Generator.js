@@ -34,11 +34,11 @@ async function getJSONFile(startName, startLat, startLon, endName, endLat, endLo
 // finds full geometry code to send over
 function calcTotalGeom(route) {
 	// Record start position
-	geom = [[route[0].x1, route[0].y1]]
+	geom = [[route[0].y1, route[0].x1]]
 
 	// Create list of coords
 	for (i in route) {
-		geom.push([route[i].x1, route[i].y1])
+		geom.push([route[i].y1, route[i].x1])
 	}
 
 	return polyline.encode(geom)
