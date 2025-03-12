@@ -5,13 +5,15 @@ var polyline = require('polyline');
 async function getJSONFile(startName, startLat, startLon, endName, endLat, endLon) {
 	let JSONObject = {}; // JSON to output
 
-	if ((startName == null && startLat == null && startLon == null)
-		|| (endName == null && endLat == null && endLon == null)) {
+	if ((startName == null && (startLat == null || startLon == null))
+		|| (endName == null && (endLat == null || endLon == null))) {
 		
-		JSONObject.code = "Error";
-		JSONObject.des = "Invalid inputs";
+		JSONObject.code = "Invalid inputs";
 		return JSONObject;
 	}
+
+	if (startName == null) {startName = ""};
+	if (endName == null) {endName = ""};
 
 	try {
 		route = await database.getRoute(startName, startLat, startLon, endName, endLat, endLon);
@@ -19,6 +21,7 @@ async function getJSONFile(startName, startLat, startLon, endName, endLat, endLo
 
 		console.log(calcTotalGeom(route))
 		JSONObject.geom = calcTotalGeom(route);
+		JSONObject.code = "Ok";
 	
 	} catch (err) {
 		console.log("Error: " + err);

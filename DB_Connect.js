@@ -47,11 +47,8 @@ async function getRoute(startName, startLat, startLon, endName, endLat, endLon) 
 
 // Find source location for given address, lat and lon
 async function queryLocationId(name, lat, lon) {
-    lbLat = Math.floor(lat * 1000) / 1000; // Round down to 3 decimal places
-    lbLon = Math.floor(lon * 1000) / 1000;
-    ubLat = lbLat + 0.001;
-    ubLon = lbLon + 0.001;
-    query = 'SELECT source FROM ways WHERE name LIKE \'' + name + '%\' AND x1 < ' + ubLat + ' AND x1 > ' + lbLat + ' AND y1 < ' + ubLon + ' AND y1 > ' + lbLon;
+	// Looks at bounding box of every road and searches to see if lat and lon are bounded within it
+    query = 'SELECT source FROM ways WHERE ((x1 < '+ lat +' AND x2 >'+ lat + ') OR (x2 < '+ lat +' AND x1 > ' + lat + ')) AND ((y1 < '+ lon +' AND y2 > '+ lon +') OR (y2 <' + lon + ' AND y1 > ' + lon + '))';
 
     var table = await queryDatabase(query);
 	console.log("Location Table for: " + name);

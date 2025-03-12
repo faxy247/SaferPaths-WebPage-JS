@@ -17,11 +17,11 @@ app.get("/default_test", async (req,res) => {
     try {
         const JSONFile = await JSONGen.getJSONFile(
             "Walmsley Road",
-            -1.57105,
-            53.81279,
+            -1.5733895000,
+            53.8121758000,
             "Kingston Terrace",
-            -1.553111,
-            53.8093132
+            -1.552916,
+            53.809503
         );
 
         res.send(JSONFile)
@@ -45,8 +45,7 @@ app.get("/route", async (req,res) => {
         res.send(response);
     } catch (err) {
         let JSON = {};
-        JSON.code = "error";
-        JSON.des = err;
+        JSON.code = err;
         console.log("error: " + err);
         
         res.send(JSON);
