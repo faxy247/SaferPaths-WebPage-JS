@@ -35,12 +35,10 @@ async function getResultTable() {
 // Create route
 async function getRoute(startName, startLat, startLon, endName, endLat, endLon) {
     startId = await queryLocationId(startName, startLat, startLon);
-	console.log("startId: " + startId);
     endId = await queryLocationId(endName, endLat, endLon);
-	console.log("endId: " + startId);
 
     routeTable = await queryRoute(startId, endId);
-	console.log(routeTable);
+	console.log(routeTable.rows);
 
 	return routeTable.rows;
 }
@@ -52,7 +50,7 @@ async function queryLocationId(name, lat, lon) {
 
     var table = await queryDatabase(query);
 	console.log("Location Table for: " + name);
-	console.log(table);
+	console.log(table.rows);
 
     if (table.rows.length > 0) {
         return table.rows[0].source; // Return first location listed
