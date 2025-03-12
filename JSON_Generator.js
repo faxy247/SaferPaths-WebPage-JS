@@ -7,6 +7,8 @@ async function getJSONFile(startName, startLat, startLon, endName, endLat, endLo
 
 	if ((startName == null && startLat == null && startLon == null)
 		|| (endName == null && endLat == null && endLon == null)) {
+	if ((startName == null && (startLat == null || startLon == null))
+		|| (endName == null && (endLat == null || endLon == null))) {
 		
 		JSONObject.code = "Error";
 		JSONObject.des = "Invalid inputs";
