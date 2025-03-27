@@ -15,7 +15,7 @@ async function getRoute(startName, startLat, startLon, endName, endLat, endLon) 
 // Find source location for given address, lat and lon
 async function queryLocationId(name, lat, lon) {
 	// Looks at bounding box of every road and searches to see if lat and lon are bounded within it
-    query = 'SELECT source FROM ways WHERE ((x1 < '+ lat +' AND x2 >'+ lat + ') OR (x2 < '+ lat +' AND x1 > ' + lat + ')) AND ((y1 < '+ lon +' AND y2 > '+ lon +') OR (y2 <' + lon + ' AND y1 > ' + lon + '))';
+    query = 'SELECT source FROM ways ORDER BY the_geom <-> ST_GeometryFromText(\'POINT(' + lat + ' ' + lon +')\',4326) LIMIT 1';
 
     var table = await db.queryDatabase(query);
 	console.log("Location Table for " + name + " made.");

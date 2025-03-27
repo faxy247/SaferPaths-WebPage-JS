@@ -76,7 +76,7 @@ app.get("/heatmap/default", async(req,res) => {
 
 // heatmap for testing
 app.get("/heatmap", async(req,res) => {
-    console.log("Default HeatMap");
+    console.log("HeatMap");
     try {
         const JSONFile = await JSONGen.getHeatMapJSON(
             req.query.lonl,

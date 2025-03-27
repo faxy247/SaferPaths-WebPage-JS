@@ -63,7 +63,7 @@ async function getHeatMapJSON(lonl, lonr, latb, latt) {
 		console.log("getRoadObject completed");
 
 		JSONObject.roads = roads;
-		JSONObject.code = "ok";
+		JSONObject.code = "Ok";
 		
 	} catch (err) {
 		console.log("Error: " + err);
