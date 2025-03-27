@@ -31,7 +31,7 @@ async function queryLocationId(name, lat, lon) {
 // Find Route
 async function queryRoute(startId, endId) {
 	console.log("query route at: " + startId + ", " + endId);
-    query = 'SELECT * FROM pgr_dijkstra(\' SELECT gid AS id, source, target, cost AS cost FROM PathRoutes\',' + startId + ',' + endId + ', directed := false) INNER JOIN ways ON node = ways.source ORDER BY seq';
+    query = 'SELECT * FROM pgr_bdDijkstra(\' SELECT gid AS id, source, target, cost AS cost FROM PathRoutes\',' + startId + ',' + endId + ', directed := false) INNER JOIN ways ON node = ways.source ORDER BY seq';
 	var routeTable = await db.queryDatabase(query);
 	return routeTable;
 }
