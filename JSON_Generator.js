@@ -1,8 +1,9 @@
 // Database Connection Details
-const database = require('./DB_Connect');
+const RouteGen = require('./Route');
+const HeatMapGen = require('./HeatMap')
 var polyline = require('polyline');
 
-async function getJSONFile(startName, startLat, startLon, endName, endLat, endLon) {
+async function getRouteJSON(startName, startLat, startLon, endName, endLat, endLon) {
 	let JSONObject = {}; // JSON to output
 
 	if ((startName == null && (startLat == null || startLon == null))
@@ -12,11 +13,12 @@ async function getJSONFile(startName, startLat, startLon, endName, endLat, endLo
 		return JSONObject;
 	}
 
+	// Using lat and lon only, we require start and end name to be empty strings
 	if (startName == null) {startName = ""};
 	if (endName == null) {endName = ""};
 
 	try {
-		route = await database.getRoute(startName, startLat, startLon, endName, endLat, endLon);
+		route = await RouteGen.getRoute(startName, startLat, startLon, endName, endLat, endLon);
 		console.log("route made");
 
 		console.log(calcTotalGeom(route))
@@ -44,4 +46,49 @@ function calcTotalGeom(route) {
 	return polyline.encode(geom)
 }
 
-module.exports = { getJSONFile };
+async function getHeatMapJSON(lonl, lonr, latb, latt) {
+	let JSONObject = {};
+
+	if (lonl == null || lonr == null || latb == null || latt == null) {
+		JSONObject.code = "Invalid inputs";
+		return JSONObject;
+	}
+
+	try {
+		heatMap = await HeatMapGen.getHeatMap(lonl, lonr, latb, latt);
+		console.log("heatMap");
+		console.log(heatMap);
+
+		roads = getRoadObjects(heatMap);
+		console.log("getRoadObject completed");
+
+		JSONObject.roads = roads;
+		JSONObject.code = "ok";
+		
+	} catch (err) {
+		console.log("Error: " + err);
+		JSONObject.code = "Error"
+	}
+
+	return JSONObject;
+}
+
+// Returns list of road geometries and cost metrics
+function getRoadObjects(roadTable) {
+	var roads = [{}];
+
+	for (i in roadTable) {
+		road = {};
+		road.geom = polyline.encode([
+			[roadTable[i].y1, roadTable[i].x1],
+			[roadTable[i].y2, roadTable[i].x2]
+		]);
+		road.cost = roadTable[i].total;
+		console.log("road: " + road);
+		roads[i] = road;
+	}
+
+	return roads;
+}
+
+module.exports = { getRouteJSON, getHeatMapJSON };

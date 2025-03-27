@@ -12,28 +12,10 @@ app.listen(port, () => {
     console.log("Example app listening at http://***REMOVED***:" + port);
 })
 
-// Used as a general default route to do testing
-app.get("/default_test", async (req,res) => {
-    try {
-        const JSONFile = await JSONGen.getJSONFile(
-            "Walmsley Road",
-            -1.5733895000,
-            53.8121758000,
-            "Kingston Terrace",
-            -1.552916,
-            53.809503
-        );
-
-        res.send(JSONFile)
-    } catch (err) {
-        console.log(err);
-    }
-});
-
 // General queries on route
 app.get("/route", async (req,res) => {
     try {
-        const response = await JSONGen.getJSONFile(
+        const response = await JSONGen.getRouteJSON(
             req.query.sname,
             req.query.slat,
             req.query.slon,
@@ -51,3 +33,44 @@ app.get("/route", async (req,res) => {
         res.send(JSON);
     }
 })
+
+// Used as a general default route to do testing
+app.get("/route/default", async (req,res) => {
+    console.log("Default Route");
+    try {
+        const JSONFile = await JSONGen.getRouteJSON(
+            "Walmsley Road",
+            -1.5733895000,
+            53.8121758000,
+            "Kingston Terrace",
+            -1.552916,
+            53.809503
+        );
+
+        res.send(JSONFile)
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+// Default heatmap for testing
+app.get("/heatmap/default", async(req,res) => {
+    console.log("Default HeatMap");
+    try {
+        const JSONFile = await JSONGen.getHeatMapJSON(
+            -1.580293,
+            -1.566131,
+            53.809236,
+            53.814658
+        )
+
+        res.send(JSONFile)
+    } catch (err) {
+        let JSON = {};
+        JSON.code = err;
+        console.log("error: " + err);
+        
+        res.send(JSON);
+    }
+})
+
