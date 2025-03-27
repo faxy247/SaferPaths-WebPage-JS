@@ -84,7 +84,6 @@ function getRoadObjects(roadTable) {
 			[roadTable[i].y2, roadTable[i].x2]
 		]);
 		road.cost = roadTable[i].total;
-		console.log("road: " + road);
 		roads[i] = road;
 	}
 
