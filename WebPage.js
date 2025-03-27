@@ -74,3 +74,24 @@ app.get("/heatmap/default", async(req,res) => {
     }
 })
 
+// heatmap for testing
+app.get("/heatmap", async(req,res) => {
+    console.log("Default HeatMap");
+    try {
+        const JSONFile = await JSONGen.getHeatMapJSON(
+            req.query.lonl,
+            req.query.lonr,
+            req.query.latb,
+            req.query.latt,
+        )
+
+        res.send(JSONFile)
+    } catch (err) {
+        let JSON = {};
+        JSON.code = err;
+        console.log("error: " + err);
+        
+        res.send(JSON);
+    }
+})
+
