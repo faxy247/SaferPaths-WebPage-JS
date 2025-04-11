@@ -3,7 +3,7 @@ const RouteGen = require('./Route');
 const HeatMapGen = require('./HeatMap')
 var polyline = require('polyline');
 
-async function getRouteJSON(startName, startLat, startLon, endName, endLat, endLon) {
+async function getRouteJSON(startName, startLat, startLon, endName, endLat, endLon, alg = 0) {
 	let JSONObject = {}; // JSON to output
 
 	if ((startName == null && (startLat == null || startLon == null))
@@ -18,7 +18,7 @@ async function getRouteJSON(startName, startLat, startLon, endName, endLat, endL
 	if (endName == null) {endName = ""};
 
 	try {
-		route = await RouteGen.getRoute(startName, startLat, startLon, endName, endLat, endLon);
+		route = await RouteGen.getRoute(startName, startLat, startLon, endName, endLat, endLon, alg);
 		console.log("route made");
 
 		console.log(calcTotalGeom(route))

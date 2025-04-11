@@ -38,14 +38,20 @@ app.get("/route", async (req,res) => {
 app.get("/route/default", async (req,res) => {
     console.log("Default Route");
     try {
+        var alg = 0;
+        if (req.query.alg != null){
+            alg = Number(req.query.alg);
+        }
         const JSONFile = await JSONGen.getRouteJSON(
             "Walmsley Road",
             -1.5733895000,
             53.8121758000,
             "Kingston Terrace",
             -1.552916,
-            53.809503
+            53.809503,
+            alg
         );
+        
 
         res.send(JSONFile)
     } catch (err) {

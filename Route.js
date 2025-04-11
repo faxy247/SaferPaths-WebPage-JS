@@ -1,13 +1,13 @@
 const db = require('./DB_Connect');
 
 // Create route
-async function getRoute(startName, startLat, startLon, endName, endLat, endLon) {
+async function getRoute(startName, startLat, startLon, endName, endLat, endLon, alg) {
     startId = await queryLocationId(startName, startLat, startLon);
     endId = await queryLocationId(endName, endLat, endLon);
 
-    routeTable = await queryRoute(startId, endId);
 	console.log("Route Table made.");
 	console.log(routeTable.rows);
+    routeTable = await queryRoute(startId, endId, alg);
 
 	return routeTable.rows;
 }
@@ -29,9 +29,21 @@ async function queryLocationId(name, lat, lon) {
 }
 
 // Find Route
-async function queryRoute(startId, endId) {
 	console.log("query route at: " + startId + ", " + endId);
-    query = 'SELECT * FROM pgr_bdDijkstra(\' SELECT gid AS id, source, target, cost AS cost FROM PathRoutes\',' + startId + ',' + endId + ', directed := false) INNER JOIN ways ON node = ways.source ORDER BY seq';
+async function queryRoute(startId, endId, alg) {
+    var query = '';
+    switch(alg){
+        case 1: // aStar no Heuristic
+            query = 'SELECT * FROM pgr_bdAstar(\'SELECT gid AS id, source, target, cost, cost, x1, y1, x2, y2 FROM pathroutes\',' + startId + ',' + endId + ',directed => false,heuristic => 0) INNER JOIN PathRoutes ON node = Pathroutes.source ORDER BY seq';
+            break;
+        case 2: // Dijkstra
+            query = 'SELECT * FROM pgr_bdDijkstra(\' SELECT gid AS id, source, target, cost AS cost FROM PathRoutes\',' + startId + ',' + endId + ', directed := false) INNER JOIN PathRoutes ON node = Pathroutes.source ORDER BY seq';
+            break;
+        default: // aStar with Heuristic being pythagorean distance
+            query = 'SELECT * FROM pgr_bdAstar(\'SELECT gid AS id, source, target, cost, cost, x1, y1, x2, y2 FROM pathroutes\',' + startId + ',' + endId + ',directed => false,heuristic => 4) INNER JOIN PathRoutes ON node = Pathroutes.source ORDER BY seq';
+    }
+    
+
 	var routeTable = await db.queryDatabase(query);
 	return routeTable;
 }
