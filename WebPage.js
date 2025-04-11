@@ -39,20 +39,41 @@ app.get("/route/default", async (req,res) => {
     console.log("Default Route");
     try {
         var alg = 0;
+        var route = 0;
         if (req.query.alg != null){
             alg = Number(req.query.alg);
         }
+        if (req.query.route != null){
+            route = Number(req.query.route);
+        }
+
+        let address = {}
+        switch (route) {
+            case 1:
+                address.startName = "St Michael's Lane";
+                address.startLat = -1.582911;
+                address.startLon = 53.817015;
+                address.endName = "New Station Street";
+                address.endLat = -1.547932;
+                address.endLon = 53.795225;
+            break;
+            default:
+                address.startName = "Walmsley Road";
+                address.startLat = -1.5733895000;
+                address.startLon = 53.8121758000;
+                address.endName = "Kingston Terrace";
+                address.endLat = -1.552916;
+                address.endLon = 53.809503;
+        }
         const JSONFile = await JSONGen.getRouteJSON(
-            "Walmsley Road",
-            -1.5733895000,
-            53.8121758000,
-            "Kingston Terrace",
-            -1.552916,
-            53.809503,
+            address.startName,
+            address.startLat,
+            address.startLon,
+            address.endName,
+            address.endLat,
+            address.endLon,
             alg
         );
-        
-
         res.send(JSONFile)
     } catch (err) {
         console.log(err);
