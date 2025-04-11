@@ -47,7 +47,6 @@ async function queryDatabase(query) {
 					}
 				});
 			});
-			console.log(table)
 			return table;
 		});
 		

@@ -5,8 +5,6 @@ async function getRoute(startName, startLat, startLon, endName, endLat, endLon, 
     startId = await queryLocationId(startName, startLat, startLon);
     endId = await queryLocationId(endName, endLat, endLon);
 
-	console.log("Route Table made.");
-	console.log(routeTable.rows);
     routeTable = await queryRoute(startId, endId, alg);
 
 	return routeTable.rows;
@@ -18,9 +16,6 @@ async function queryLocationId(name, lat, lon) {
     query = 'SELECT source FROM ways ORDER BY the_geom <-> ST_GeometryFromText(\'POINT(' + lat + ' ' + lon +')\',4326) LIMIT 1';
 
     var table = await db.queryDatabase(query);
-	console.log("Location Table for " + name + " made.");
-	//console.log(table.rows);
-
     if (table.rows.length > 0) {
         return table.rows[0].source; // Return first location listed
     } else {
@@ -29,7 +24,6 @@ async function queryLocationId(name, lat, lon) {
 }
 
 // Find Route
-	console.log("query route at: " + startId + ", " + endId);
 async function queryRoute(startId, endId, alg) {
     var query = '';
     switch(alg){
