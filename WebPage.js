@@ -9,12 +9,13 @@ const port = 3000;
 
 app.use(express.json());
 app.listen(port, () => {
-    console.log("Example app listening at http://localhost:" + port);
+    console.log("Example app listening at http://***REMOVED***:" + port);
 })
 
 // General queries on route
 app.get("/route", async (req,res) => {
     try {
+        const startTime = performance.now();
         const response = await JSONGen.getRouteJSON(
             req.query.sname,
             req.query.slat,
@@ -23,7 +24,9 @@ app.get("/route", async (req,res) => {
             req.query.elat,
             req.query.elon
         )
-
+        const endTime = performance.now();
+        const time = endTime - startTime;
+        console.log('Route took: ' + time + ' ms')
         res.send(response);
     } catch (err) {
         let JSON = {};
@@ -38,6 +41,7 @@ app.get("/route", async (req,res) => {
 app.get("/route/default", async (req,res) => {
     console.log("Default Route");
     try {
+        const startTime = performance.now();
         var alg = 0;
         var route = 0;
         if (req.query.alg != null){
@@ -74,6 +78,9 @@ app.get("/route/default", async (req,res) => {
             address.endLon,
             alg
         );
+        const endTime = performance.now();
+        const time = endTime - startTime;
+        console.log('Route took: ' + time + ' ms')
         res.send(JSONFile)
     } catch (err) {
         console.log(err);

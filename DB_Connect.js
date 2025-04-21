@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 require('dotenv').config()
+const {performance} = require('perf_hooks')
 
 const pool = new Pool({
 	user: process.env.DB_USER,
@@ -28,6 +29,7 @@ async function getResultTable() {
 
 async function queryDatabase(query) {
 	console.log("queryDatabase: " + query);
+	const startTime = performance.now();
     try {
 		const result = await usePooledConnectionAsync(async connection =>{
 			const table = await new Promise((resolve, reject) => {
@@ -41,7 +43,9 @@ async function queryDatabase(query) {
 			});
 			return table;
 		});
-		
+		const endTime = performance.now();
+		const time = endTime - startTime;
+		console.log('Query took: ' + time + ' ms')
 		return result;
     } catch (err) {
         return err.stack;
