@@ -9,7 +9,7 @@ const port = 3000;
 
 app.use(express.json());
 app.listen(port, () => {
-    console.log("Example app listening at http://***REMOVED***:" + port);
+    console.log("Example app listening at http://localhost:" + port);
 })
 
 // General queries on route
